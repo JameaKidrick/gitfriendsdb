@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const authDB = require('./authModel');
 
 module.exports = (req, res, next) => {
   const token = req.headers.authorization;
@@ -10,8 +11,12 @@ module.exports = (req, res, next) => {
       if(err){
         res.status(401).json({ error: 'Invalid credentials' })
       }else{
-        req.decodeJwt = decodedToken;
-        next();
+        authDB.findByUsername(decodedToken.username)
+        .then(user => {
+          req.user_id = user.user_id 
+          req.decodeJwt = decodedToken;
+          next();
+        })
       }
     })
   }else{

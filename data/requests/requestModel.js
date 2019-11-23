@@ -44,10 +44,19 @@ function decide(id, status){
   return db('friend_request')
     .update(status)
     .where({ 'request_id':id })
+    .then(request => {
+      return findBy(id)
+    })
 }
 
 function remove(id){
-  return db('friend_request')
-    .del()
-    .where({ 'request_id':id })
+  return findBy(id)
+    .then(findRequest => {
+      return db('friend_request')
+        .del()
+        .where({ 'request_id':id })
+        .then(deleted => {
+          return findRequest
+        })
+    })
 }
