@@ -5,10 +5,10 @@ exports.up = function(knex) {
       .increments();
     
     table
-      .integer('fave_language_id')
+      .integer('profile_id')
       .unsigned()
-      .references('fave_language_id')
-      .inTable('fave_language')
+      .references('profile_id')
+      .inTable('profile')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
 
