@@ -25,21 +25,21 @@ function findById(id){
 // GET SPECIFIC USER BY EMAIL
 function findByEmail(email){
   return db('users')
-  .where({'users.email': email})
+  .where({'email': email})
   .first()
 }
 
 // GET SPECIFIC USER BY USERNAME
 function findByUsername(username){
   return db('users')
-  .where({'users.username': username})
+  .where({'username': username})
   .first()
 }
 
 // ADD NEW USER
 function add(user){
   return db('users')
-    .insert(user)
+    .insert(user, 'user_id')
 }
 
 // EDIT USER

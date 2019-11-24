@@ -13,22 +13,22 @@ const router = express.Router();
 router.get('/requests', [verifyToken], (req, res) => {
   if(req.decodeJwt.role === 'admin'){
     requestDB.find()
-    .then(requests => {
-      res.status(200).json(requests)
-    })
-    .catch(error => {
-      res.status(500).json({ error: 'Internal server error', error })
-    })
+      .then(requests => {
+        res.status(200).json(requests) // ✅
+      })
+      .catch(error => {
+        res.status(500).json({ error: 'Internal server error', error })
+      })
   }else{
-    res.status(403).json({ message: `You do not have the authorization to go further. Authorization needed: administrator` })
+    res.status(403).json({ message: `You do not have the authorization to go further. Authorization needed: administrator` }) // ✅
   }
 })
 
-// GET SPECIFIC REQUEST (USER AND ADMIN ONLY)
-router.get('/requests/:id', [verifyToken, validateRequestID], (req, res) => {
-    requestDB.findBy(req.params.id)
+// GET SPECIFIC REQUEST
+router.get('/requests/:requestid', [verifyToken, validateRequestID], (req, res) => {
+    requestDB.findBy(req.params.requestid)
       .then(request => {
-        res.status(200).json(request)
+        res.status(200).json(request) // ✅
       })
       .catch(error => {
         res.status(500).json({ error: 'Internal server error', error })
@@ -36,56 +36,62 @@ router.get('/requests/:id', [verifyToken, validateRequestID], (req, res) => {
 })
 
 // GET LIST OF ALL USER'S REQUESTS (USER AND ADMIN ONLY)
-router.get('/users/:id/requests', [verifyToken, validateUserID], (req, res) => {
-  if(req.decodeJwt.role === 'admin' || req.user_id === Number(req.params.id)){
-  requestDB.findByUser(req.params.id)
+router.get('/users/:userid/requests', [verifyToken, validateUserID], (req, res) => {
+  if(req.decodeJwt.role === 'admin' || req.decodeJwt.id === Number(req.params.userid)){
+  requestDB.findByUser(req.params.userid)
     .then(userRequests => {
       if(!userRequests.length){
-        res.status(400).json({ message: 'No new requests' })
+        res.status(400).json({ message: 'No new requests' }) // ✅
       }else{
-        res.status(200).json(userRequests)
+        res.status(200).json(userRequests) // ✅
       }
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error', error })
     })
   }else{
-    res.status(403).json({ error: 'Unauthorized' })
+    res.status(403).json({ error: 'Unauthorized' }) // ✅
   }
 })
 
 // SEND FRIEND REQUEST (USER ONLY)
-router.post('/users/:id/requests', [verifyToken, validateUserID], (req, res) => {
-  const friend_id = req.params.id;
+router.post('/users/:userid/requests', [verifyToken, validateUserID], (req, res) => {
+  const friend_id = Number(req.params.userid);
 
-  if(req.user_id < friend_id){
+  if(req.decodeJwt.id === friend_id){
+    request = 0;
+  }else if(req.decodeJwt.id < friend_id){
     request = {
-      "user1_id": req.user_id,
+      "user1_id": req.decodeJwt.id,
       "user2_id": friend_id,
-      "requestor_id": req.user_id
+      "requestor_id": req.decodeJwt.id
     }
   }else{
     request = {
       "user1_id": friend_id,
-      "user2_id": req.user_id,
-      "requestor_id": req.user_id
+      "user2_id": req.decodeJwt.id,
+      "requestor_id": req.decodeJwt.id
     }
   }
-  
-  requestDB.findByPair(request.user1_id, request.user2_id)
+
+  if(request === 0){
+    res.status(400).json({ error: 'User can not send a friend request to theirself' }) // ✅
+  }else{
+    requestDB.findByPair(request.user1_id, request.user2_id)
     .then(pair => {
       if(!pair){
         requestDB.send(request)
           .then(friendRequest => {
-            res.status(201).json({ message: 'Friend request sent' })
+            res.status(201).json({ message: 'Friend request sent' }) // ✅
           })
           .catch(error => {
             res.status(500).json({ error: 'Internal server error', error })
           })
       }else{
-        res.status(400).json({ message: 'Friend request was already sent, please wait for a response' })
+        res.status(400).json({ message: 'Friend request was already sent, please wait for a response' }) // ✅
       }
     })
+  }
 })
 
 // REPLY TO FRIEND REQUEST (USER ONLY)
@@ -94,41 +100,43 @@ router.put('/users/:userid/requests/:requestid', [verifyToken, validateUserID, v
   const request_id = req.params.requestid;
   const status = req.body;
 
-  if(req.user_id === Number(user_id)){ // verify user
+  if(req.decodeJwt.id === Number(user_id)){ // verify user
   requestDB.findBy(request_id)
     .then(request => {
-      if(Number(user_id) != request.requestor_id && ( Number(user_id) === request.user1_id || Number(user_id) === request.user2_id)){ // verify user is not requestor, but is one of the users
+      if(Number(user_id) != request.requestor_id && (Number(user_id) === request.user1_id || Number(user_id) === request.user2_id)){ // verify user is not requestor, but is one of the users
         requestDB.decide(request_id, status)
           .then(updateRequest => {
             if(updateRequest.request_status === 2){ // sets mutual friendship when friend request is accepted
-              res.status(201).json({'Friend Request Accepted': updateRequest})
+              res.status(201).json({'Friend Request Accepted': updateRequest}) // ✅
             }else if(updateRequest.request_status === 3){ // removes friend request when friend request is denied
               requestDB.remove(request_id)
                 .then(deletedRequest => {
-                  res.status(201).json({'Friend Request Denied and Request Deleted': updateRequest})
+                  res.status(201).json({'Friend Request Denied and Request Deleted': updateRequest}) // ✅
                 })
             }
           })
           .catch(error => {
             res.status(500).json({ error: 'Internal server error', error })
           })
+      }else{
+        res.status(400).json({ error: 'User does not have the authorization to accept or decline request' }) // ✅
       }
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error', error })
     })
   }else{
-    res.status(403).json({ error: 'User does not have authorization to alter this friend request' })
+    res.status(403).json({ error: 'User does not have authorization to alter this friend request' }) // ✅
   }
 })
 
 // DELETE FRIEND REQUEST (USER AND ADMIN ONLY)
-router.delete('/requests/:id', [validateRequestID], (req, res) => {
-  const request_id = req.params.id;
+router.delete('/requests/:requestid', [validateRequestID], (req, res) => {
+  const request_id = req.params.requestid;
 
   requestDB.remove(request_id)
     .then(deletedRequest => {
-      res.status(201).json({ 'DELETED':deletedRequest })
+      res.status(201).json({ 'DELETED':deletedRequest }) // ✅
     })
 })
 

@@ -11,12 +11,11 @@ const verifyToken = (req, res, next) => {
       if(err){
         res.status(401).json({ error: 'Invalid credentials' })
       }else{
-        authDB.findByUsername(decodedToken.username)
-        .then(user => {
-          req.user_id = user.user_id 
-          req.decodeJwt = decodedToken;
-          next();
-        })
+        authDB.findByUsername(decodedToken.payload.username)
+          .then(user => {
+            req.decodeJwt = decodedToken.payload;
+            next();
+          })
       }
     })
   }else{

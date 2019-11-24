@@ -22,7 +22,7 @@ function getJwtToken(id, username, role){
     expiresIn: '1d'
   };
 
-  return jwt.sign(payload, secret, options);
+  return jwt.sign({payload}, secret, options);
 };
 
 
@@ -34,11 +34,11 @@ router.post('/register', [validateRegister], (req, res) => {
       .then(store => {
         authDB.findByUsername(req.user.username)
           .then(newUser => {
-            const token = getJwtToken(req.user.id, req.user.username,req.user.role)
-            res.status(201).json({ 'New User Created': req.user.username, token }) // ✅
+            const token = getJwtToken(newUser.user_id, newUser.username,newUser.role)
+            res.status(201).json({ 'New User Created': newUser.username, token }) // ✅
           })
           .catch(error => {
-            res.status(500).json({ error: 'Internal server error ', error })
+            res.status(500).json({ error: 'Internal server error ', error }) // ✅
           })
       })
 })
@@ -49,16 +49,15 @@ router.post('/login', [validateLogin], (req, res) => {
   authDB.findByUsername(username)
     .then(findUser => {
       if(findUser && bcrypt.compareSync(password, findUser.password)){
-        const token = getJwtToken(req.user.id, req.user.username,req.user.role)
+        const token = getJwtToken(findUser.user_id, findUser.username,findUser.role)
         res.status(200).json({ message: `Welcome ${findUser.username}!`, token }) // ✅
       }else{
-        res.status(401).json({ message: 'Invalid credentials' })
+        res.status(401).json({ message: 'Invalid credentials' }) // ✅
       }
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error ', error })
     });
-
 })
 
 module.exports = router;

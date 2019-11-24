@@ -30,7 +30,7 @@ function add(profile){
   return db('profile')
     .insert(profile, 'profile_id')
     .then(id => {
-      return id[0]
+      return findBy(id[0])
     })
 }
 
