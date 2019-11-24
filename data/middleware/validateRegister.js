@@ -1,4 +1,4 @@
-const authDB = require('../authorization/authModel');
+const authDB = require('../users/usersModel');
 
 const validateRegister = (req, res, next) => {
   const user = req.body

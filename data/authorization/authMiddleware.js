@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const authDB = require('./authModel');
+const authDB = require('../users/usersModel');
 
-module.exports = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
 
   if(token){
@@ -23,3 +23,5 @@ module.exports = (req, res, next) => {
     res.status(400).json({ error: 'Please provide credentials' })
   }
 }
+
+module.exports = verifyToken;

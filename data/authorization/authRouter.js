@@ -2,17 +2,18 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const authDB = require('./authModel');
+const authDB = require('../users/usersModel');
 
 const validateRegister = require('../middleware/validateRegister');
 const validateLogin = require('../middleware/validateLogin');
 
 const router = express.Router();
 
-function getJwtToken(id, username){
+function getJwtToken(id, username, role){
   const payload = {
     id,
-    username
+    username,
+    role
   };
 
   const secret = process.env.JWT_SECRET;
@@ -33,7 +34,7 @@ router.post('/register', [validateRegister], (req, res) => {
       .then(store => {
         authDB.findByUsername(req.user.username)
           .then(newUser => {
-            const token = getJwtToken(req.user.id, req.user.username)
+            const token = getJwtToken(req.user.id, req.user.username,req.user.role)
             res.status(201).json({ 'New User Created': req.user.username, token }) // ✅
           })
           .catch(error => {
@@ -48,7 +49,7 @@ router.post('/login', [validateLogin], (req, res) => {
   authDB.findByUsername(username)
     .then(findUser => {
       if(findUser && bcrypt.compareSync(password, findUser.password)){
-        const token = getJwtToken(findUser.id, findUser.username)
+        const token = getJwtToken(req.user.id, req.user.username,req.user.role)
         res.status(200).json({ message: `Welcome ${findUser.username}!`, token }) // ✅
       }else{
         res.status(401).json({ message: 'Invalid credentials' })

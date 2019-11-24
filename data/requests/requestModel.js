@@ -2,15 +2,13 @@
 // STATUS = 2: ACCEPTED
 // STATUS = 3: DENIED => DELETE
 
-// SET REQUESTOR AS REQUESTOR_ID
-// SET USER WITH SMALLER ID AS USER1
-
 const db = require('../dbConfig');
 
 module.exports = {
   find,
   findBy,
   findByUser,
+  findByPair,
   send,
   decide,
   remove
@@ -30,6 +28,13 @@ function findByUser(id){
   return db('friend_request')
     .where({ 'user1_id':id })
     .orWhere({ 'user2_id':id })
+}
+
+function findByPair(firstUser_id, secondUser_id){
+  return db('friend_request')
+    .where({ 'user1_id':firstUser_id })
+    .andWhere({ 'user2_id':secondUser_id })
+    .first()
 }
 
 function send(request){

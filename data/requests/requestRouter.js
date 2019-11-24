@@ -1,46 +1,61 @@
 const express = require('express');
 
 const verifyToken = require('../authorization/authMiddleware');
+const validateUserID = require('../middleware/validateUserID');
+const validateRequestID = require('../middleware/validateRequestID');
 
 const requestDB = require('./requestModel');
+
 
 const router = express.Router();
 
 // GET ALL REQUESTS (ADMIN ONLY)
-router.get('/requests', (req, res) => {
-  requestDB.find()
+router.get('/requests', [verifyToken], (req, res) => {
+  if(req.decodeJwt.role === 'admin'){
+    requestDB.find()
     .then(requests => {
       res.status(200).json(requests)
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error', error })
     })
+  }else{
+    res.status(403).json({ message: `You do not have the authorization to go further. Authorization needed: administrator` })
+  }
 })
 
 // GET SPECIFIC REQUEST (USER AND ADMIN ONLY)
-router.get('/requests/:id', (req, res) => {
-  requestDB.findBy(req.params.id)
-    .then(request => {
-      res.status(200).json(request)
-    })
-    .catch(error => {
-      res.status(500).json({ error: 'Internal server error', error })
-    })
+router.get('/requests/:id', [verifyToken, validateRequestID], (req, res) => {
+    requestDB.findBy(req.params.id)
+      .then(request => {
+        res.status(200).json(request)
+      })
+      .catch(error => {
+        res.status(500).json({ error: 'Internal server error', error })
+      })
 })
 
 // GET LIST OF ALL USER'S REQUESTS (USER AND ADMIN ONLY)
-router.get('/users/:id/requests', [verifyToken], (req, res) => {
+router.get('/users/:id/requests', [verifyToken, validateUserID], (req, res) => {
+  if(req.decodeJwt.role === 'admin' || req.user_id === Number(req.params.id)){
   requestDB.findByUser(req.params.id)
     .then(userRequests => {
-      res.status(200).json(userRequests)
+      if(!userRequests.length){
+        res.status(400).json({ message: 'No new requests' })
+      }else{
+        res.status(200).json(userRequests)
+      }
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error', error })
     })
+  }else{
+    res.status(403).json({ error: 'Unauthorized' })
+  }
 })
 
 // SEND FRIEND REQUEST (USER ONLY)
-router.post('/users/:id/requests', [verifyToken], (req, res) => {
+router.post('/users/:id/requests', [verifyToken, validateUserID], (req, res) => {
   const friend_id = req.params.id;
 
   if(req.user_id < friend_id){
@@ -57,17 +72,24 @@ router.post('/users/:id/requests', [verifyToken], (req, res) => {
     }
   }
   
-  requestDB.send(request)
-    .then(friendRequest => {
-      res.status(201).json({ message: 'Friend request sent' })
+  requestDB.findByPair(request.user1_id, request.user2_id)
+    .then(pair => {
+      if(!pair){
+        requestDB.send(request)
+          .then(friendRequest => {
+            res.status(201).json({ message: 'Friend request sent' })
+          })
+          .catch(error => {
+            res.status(500).json({ error: 'Internal server error', error })
+          })
+      }else{
+        res.status(400).json({ message: 'Friend request was already sent, please wait for a response' })
+      }
     })
-    .catch(error => {
-      res.status(500).json({ error: 'Internal server error', error })
-    }) 
 })
 
 // REPLY TO FRIEND REQUEST (USER ONLY)
-router.put('/users/:userid/requests/:requestid', [verifyToken], (req, res) => {
+router.put('/users/:userid/requests/:requestid', [verifyToken, validateUserID, validateRequestID], (req, res) => {
   const user_id = req.params.userid;
   const request_id = req.params.requestid;
   const status = req.body;
@@ -101,7 +123,7 @@ router.put('/users/:userid/requests/:requestid', [verifyToken], (req, res) => {
 })
 
 // DELETE FRIEND REQUEST (USER AND ADMIN ONLY)
-router.delete('/requests/:id', (req, res) => {
+router.delete('/requests/:id', [validateRequestID], (req, res) => {
   const request_id = req.params.id;
 
   requestDB.remove(request_id)

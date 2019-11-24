@@ -23,6 +23,16 @@ exports.up = function(knex) {
       .date('date_of_birth').notNullable();
 
     table
+      .varchar('role', 65).notNullable().defaultTo('member'); 
+      // use same logic as friend request to approve new admin accounts
+        // when a new request to create an admin profile is made, I get an email to approve to disapprove
+          // pending = 
+            // adds userid to table (NEW) for pending admins with role 'pending admin' and has message after form submission pending approval
+            // user account is added to users with role 'pending approval', but it has the same privileges as a 'member'
+          // approved = updates user role to 'admin' and sends them email of approval
+          // denied = deletes user request from pending admins table, switches 'pending admin' role to 'member', and sends them email of denial
+
+    table
       .timestamps(true, true);
   })
 };
