@@ -69,4 +69,11 @@ module.exports = [
     about_me: `Internet fan. Typical tv scholar. Alcohol maven. Analyst. Evil food guru. Pop culture expert. Total organizer. I guess I wanted to leave America for awhile. It wasn't that I wanted to become an expatriate`,
     dob_display: 'December'
   },
+  {
+    user_id: 11,
+    avatar: '/static/media/5.11cd3c78.jpg',
+    location: 'Martinsburg, West Virginia',
+    about_me: `Animal Lover`,
+    dob_display: 'January 13 1994'
+  },
 ]

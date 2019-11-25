@@ -7,6 +7,7 @@ module.exports = {
   findByUsername,
   add,
   update,
+  updateRole,
   remove
 }
 
@@ -47,6 +48,15 @@ function update(id, changes){
   return db('users')
     .update(changes)
     .where({ 'user_id':id })
+}
+
+function updateRole(id, role){
+  return db('users')
+    .update({ 'role': role })
+    .where({ 'user_id':id })
+    .then(user => {
+      return findById(id)
+    })
 }
 
 // DELETE USER

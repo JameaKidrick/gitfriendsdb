@@ -195,4 +195,20 @@ module.exports = [
     profile_id: 10,
     language_id: 44
   },
+  {
+    profile_id: 11,
+    language_id: 23
+  },
+  {
+    profile_id: 11,
+    language_id: 29
+  },
+  {
+    profile_id: 11,
+    language_id: 36
+  },
+  {
+    profile_id: 11,
+    language_id: 44
+  }
 ];

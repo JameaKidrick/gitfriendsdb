@@ -6,8 +6,10 @@ const db = require('../dbConfig');
 
 module.exports = {
   find,
+  findFriends,
   findBy,
   findByUser,
+  findFriendsByUser,
   findByPair,
   send,
   decide,
@@ -16,18 +18,41 @@ module.exports = {
 
 function find(){
   return db('friend_request')
+    .where({ 'request_status': 1 })
 }
 
 function findBy(id){
   return db('friend_request')
     .where({ 'request_id':id })
+    .andWhere({ 'request_status': 1 })
     .first();
+}
+
+function findStatus(id){
+  return db('friend_request')
+    .where({ 'request_id':id })
+    .first();
+}
+
+function findFriends(){
+  return db('friend_request')
+    .where({ 'request_status': 2 })
 }
 
 function findByUser(id){
   return db('friend_request')
     .where({ 'user1_id':id })
+    .andWhere({ 'request_status': 1 })
     .orWhere({ 'user2_id':id })
+    .andWhere({ 'request_status': 1 })
+}
+
+function findFriendsByUser(id){
+  return db('friend_request')
+    .where({ 'user1_id':id })
+    .andWhere({ 'request_status': 2 })
+    .orWhere({ 'user2_id':id })
+    .andWhere({ 'request_status': 2 })
 }
 
 function findByPair(firstUser_id, secondUser_id){
@@ -50,12 +75,12 @@ function decide(id, status){
     .update(status)
     .where({ 'request_id':id })
     .then(request => {
-      return findBy(id)
+      return findStatus(id)
     })
 }
 
 function remove(id){
-  return findBy(id)
+  return findStatus(id)
     .then(findRequest => {
       return db('friend_request')
         .del()
