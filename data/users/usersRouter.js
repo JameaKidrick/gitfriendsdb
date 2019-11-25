@@ -5,6 +5,8 @@ const router = express.Router();
 
 const usersDB = require('./usersModel');
 
+const validateUserID = require('../middleware/validateUserID');
+
 // GET ALL USERS (USER AND ADMIN)
 router.get('/', (req, res) => {
   usersDB.find()
@@ -17,7 +19,7 @@ router.get('/', (req, res) => {
 })
 
 // UPDATE USER (PASSWORD => USER NEEDS TO GO THROUGH CONFIRMATION FIRST)
-router.put('/:userid', (req, res) => {
+router.put('/:userid', [validateUserID], (req, res) => {
   const userid = Number(req.params.userid);
   let changes = req.body;
 
@@ -53,7 +55,7 @@ router.put('/:userid', (req, res) => {
 })
 
 // DELETE USER (USER OR ADMIN)
-router.delete('/:userid', (req, res) => {
+router.delete('/:userid', [validateUserID], (req, res) => {
   const userid = Number(req.params.userid);
 
   if(req.decodeJwt.id === userid || (req.decodeJwt.role === 'admin')){

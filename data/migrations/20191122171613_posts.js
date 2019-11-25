@@ -10,7 +10,7 @@ exports.up = function(knex) {
       .references('user_id')
       .inTable('users')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE'); // SET NULL
 
     table
       .varchar('title', 128);

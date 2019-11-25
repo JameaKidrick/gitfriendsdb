@@ -10,7 +10,7 @@ exports.up = function(knex) {
       .references('user_id')
       .inTable('users')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE'); // SET NULL
 
     table
       .integer('post_id')
@@ -18,7 +18,7 @@ exports.up = function(knex) {
       .references('post_id')
       .inTable('posts')
       .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      .onDelete('CASCADE'); // SET NULL
 
     table
       .varchar('comment', 255).notNullable();
