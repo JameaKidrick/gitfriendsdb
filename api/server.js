@@ -10,6 +10,7 @@ const requestRouter = require('../data/requests/requestRouter');
 const profileRouter = require('../data/profile/profileRouter');
 const adminRouter = require('../data/admin/adminRouter');
 const usersRouter = require('../data/users/usersRouter');
+const faveLangRouter = require('../data/fave_lang/faveLangRouter');
 
 const server = express();
 
@@ -23,6 +24,7 @@ server.use('/api', [verifyToken], requestRouter);
 server.use('/api', [verifyToken], profileRouter);
 server.use('/api/admin', [verifyToken], adminRouter);
 server.use('/api/users', [verifyToken], usersRouter);
+server.use('/api', [verifyToken], faveLangRouter);
 
 server.get('/', (req, res) => {
   res.send('Hello World!')
