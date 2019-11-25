@@ -1,10 +1,12 @@
 const usersDB = require('../users/usersModel');
 
 const validateUserID = (req, res, next) => {
-  usersDB.findById(req.params.userid)
+  const id = req.params.userid
+
+  usersDB.findById(id)
     .then(user => {
       if(!user){
-        res.status(404).json({ error: `A user with the id ${req.params.userid} does not exist in the database` }) // ✅
+        res.status(404).json({ error: `A user with the id ${id} does not exist in the database` }) // ✅
       }else{
         next(); // ✅
       }

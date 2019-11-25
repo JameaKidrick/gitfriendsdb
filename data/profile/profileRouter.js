@@ -1,6 +1,5 @@
 const express = require('express');
 
-const verifyToken = require('../authorization/authMiddleware');
 const validateProfileID = require('../middleware/validateProfileID');
 const validateProfile = require('../middleware/validateProfile');
 const validateUserID = require('../middleware/validateUserID');
@@ -21,7 +20,7 @@ router.get('/profiles', (req, res) => {
 })
 
 // GET PROFILE BY ID
-router.get('/profiles/:profileid', [verifyToken, validateProfileID], (req, res) => {
+router.get('/profiles/:profileid', [validateProfileID], (req, res) => {
   profileDB.findBy(req.params.profileid)
     .then(profile => {
       res.status(200).json(profile) // ✅
@@ -32,7 +31,7 @@ router.get('/profiles/:profileid', [verifyToken, validateProfileID], (req, res) 
 })
 
 // GET PROFILE BY USER ID
-router.get('/users/:userid/profile', [verifyToken, validateUserID], (req, res) => {
+router.get('/users/:userid/profile', [validateUserID], (req, res) => {
   profileDB.findByUser(req.params.userid)
     .then(profile => {
       res.status(200).json(profile) // ✅
@@ -43,7 +42,7 @@ router.get('/users/:userid/profile', [verifyToken, validateUserID], (req, res) =
 })
 
 // ADD PROFILE
-router.post('/users/:userid/profile', [verifyToken, validateProfile, validateUserID], (req, res) => {
+router.post('/users/:userid/profile', [validateProfile, validateUserID], (req, res) => {
   const profile = req.body;
   const id = Number(req.params.userid);
   profile.user_id = id;
@@ -71,7 +70,8 @@ router.post('/users/:userid/profile', [verifyToken, validateProfile, validateUse
   }
 })
 
-router.put('/profiles/:profileid', [verifyToken, validateProfileID], (req, res) => {
+// UPDATE PROFILE
+router.put('/profiles/:profileid', [validateProfileID], (req, res) => {
   const id = Number(req.params.profileid);
 
   profileDB.findByUser(req.decodeJwt.id)
@@ -90,7 +90,8 @@ router.put('/profiles/:profileid', [verifyToken, validateProfileID], (req, res) 
   })
 })
 
-router.delete('/profiles/:profileid', [verifyToken, validateProfileID], (req, res) => {
+// DELETE PROFILE
+router.delete('/profiles/:profileid', [validateProfileID], (req, res) => {
   const id = Number(req.params.profileid);
 
   profileDB.findByUser(req.decodeJwt.id)

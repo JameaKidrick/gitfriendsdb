@@ -9,6 +9,7 @@ const authRouter = require('../data/authorization/authRouter');
 const requestRouter = require('../data/requests/requestRouter');
 const profileRouter = require('../data/profile/profileRouter');
 const adminRouter = require('../data/admin/adminRouter');
+const usersRouter = require('../data/users/usersRouter');
 
 const server = express();
 
@@ -18,9 +19,10 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/api/auth', authRouter);
-server.use('/api', requestRouter);
-server.use('/api', profileRouter);
+server.use('/api', [verifyToken], requestRouter);
+server.use('/api', [verifyToken], profileRouter);
 server.use('/api/admin', [verifyToken], adminRouter);
+server.use('/api/users', [verifyToken], usersRouter);
 
 server.get('/', (req, res) => {
   res.send('Hello World!')

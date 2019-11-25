@@ -1,6 +1,5 @@
 const express = require('express');
 
-const verifyToken = require('../authorization/authMiddleware');
 const validateUserID = require('../middleware/validateUserID');
 const validateRequestID = require('../middleware/validateRequestID');
 
@@ -10,7 +9,7 @@ const requestDB = require('./requestModel');
 const router = express.Router();
 
 // GET ALL REQUESTS (ADMIN ONLY)
-router.get('/requests', [verifyToken], (req, res) => {
+router.get('/requests', (req, res) => {
   if(req.decodeJwt.role === 'admin'){
     requestDB.find()
       .then(requests => {
@@ -25,7 +24,7 @@ router.get('/requests', [verifyToken], (req, res) => {
 })
 
 // GET ALL FRIENDS (ADMIN ONLY)
-router.get('/friends', [verifyToken], (req, res) => {
+router.get('/friends', (req, res) => {
   if(req.decodeJwt.role === 'admin'){
     requestDB.findFriends()
       .then(friends => {
@@ -40,7 +39,7 @@ router.get('/friends', [verifyToken], (req, res) => {
 })
 
 // GET SPECIFIC REQUEST
-router.get('/requests/:requestid', [verifyToken, validateRequestID], (req, res) => {
+router.get('/requests/:requestid', [validateRequestID], (req, res) => {
     requestDB.findBy(req.params.requestid)
       .then(request => {
         res.status(200).json(request) // ✅
@@ -51,7 +50,7 @@ router.get('/requests/:requestid', [verifyToken, validateRequestID], (req, res) 
 })
 
 // GET LIST OF ALL USER'S REQUESTS (USER AND ADMIN ONLY)
-router.get('/users/:userid/requests', [verifyToken, validateUserID], (req, res) => {
+router.get('/users/:userid/requests', [validateUserID], (req, res) => {
   if(req.decodeJwt.role === 'admin' || req.decodeJwt.id === Number(req.params.userid)){
   requestDB.findByUser(req.params.userid)
     .then(userRequests => {
@@ -70,7 +69,7 @@ router.get('/users/:userid/requests', [verifyToken, validateUserID], (req, res) 
 })
 
 // GET LIST OF ALL USER'S FRIENDS (USER AND ADMIN ONLY)
-router.get('/users/:userid/friends', [verifyToken, validateUserID], (req, res) => {
+router.get('/users/:userid/friends', [validateUserID], (req, res) => {
   if(req.decodeJwt.role === 'admin' || req.decodeJwt.id === Number(req.params.userid)){
     requestDB.findFriendsByUser(req.params.userid)
       .then(userRequests => {
@@ -90,8 +89,9 @@ router.get('/users/:userid/friends', [verifyToken, validateUserID], (req, res) =
 
 
 // SEND FRIEND REQUEST (USER ONLY)
-router.post('/users/:userid/requests', [verifyToken, validateUserID], (req, res) => {
+router.post('/users/:userid/requests', [validateUserID], (req, res) => {
   const friend_id = Number(req.params.userid);
+  console.log(friend_id)
 
   if(req.decodeJwt.id === friend_id){
     request = 0;
@@ -130,7 +130,7 @@ router.post('/users/:userid/requests', [verifyToken, validateUserID], (req, res)
 })
 
 // REPLY TO FRIEND REQUEST (USER ONLY)
-router.put('/users/:userid/requests/:requestid', [verifyToken, validateUserID, validateRequestID], (req, res) => {
+router.put('/users/:userid/requests/:requestid', [validateUserID, validateRequestID], (req, res) => {
   const user_id = Number(req.params.userid);
   const request_id = Number(req.params.requestid);
   const status = req.body;
@@ -169,9 +169,19 @@ router.put('/users/:userid/requests/:requestid', [verifyToken, validateUserID, v
 router.delete('/requests/:requestid', [validateRequestID], (req, res) => {
   const request_id = req.params.requestid;
 
-  requestDB.remove(request_id)
-    .then(deletedRequest => {
-      res.status(201).json({ 'DELETED':deletedRequest }) // ✅
+  requestDB.findBy(request_id)
+    .then(request => {
+      if(req.decodeJwt.id === request.requestor_id){
+        requestDB.remove(request_id)
+          .then(deletedRequest => {
+            res.status(201).json({ 'DELETED':deletedRequest }) // ✅
+          })
+          .catch(error => {
+            res.status(500).json({ error: 'Internal server error', error })
+          })
+      }else{
+        res.status(400).json({ error: 'User does not have the authorization to delete this request' })
+      }
     })
 })
 

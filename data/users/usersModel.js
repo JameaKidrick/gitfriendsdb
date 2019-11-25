@@ -8,6 +8,7 @@ module.exports = {
   add,
   update,
   updateRole,
+  updatePassword,
   remove
 }
 
@@ -16,7 +17,7 @@ function find(){
   return db('users')
 }
 
-// GET SPECIFIC USER
+// GET SPECIFIC USER BY ID
 function findById(id){
   return db('users')
     .where({ 'user_id':id })
@@ -48,6 +49,9 @@ function update(id, changes){
   return db('users')
     .update(changes)
     .where({ 'user_id':id })
+    .then(user => {
+      return findById(id)
+    })
 }
 
 function updateRole(id, role){
@@ -59,9 +63,24 @@ function updateRole(id, role){
     })
 }
 
+function updatePassword(id, password){
+  return db('users')
+    .update({ 'password': password})
+    .where({ 'user_id':id })
+    .then(user => {
+      return findById(id)
+    })
+}
+
 // DELETE USER
 function remove(id){
-  return db('users')
-    .del()
-    .where({ 'user_id':id })
+  return findById(id)
+    .then(user => {
+      return db('users')
+        .del()
+        .where({ 'user_id':id })
+        .then(deleted => {
+          return user
+        })
+    })
 }
