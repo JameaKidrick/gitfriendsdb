@@ -56,6 +56,7 @@ router.get('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
 
 // ADD LANGUAGE
   // COME BACK TO AFTER SETTING UP USESTATE TO SEND BACK ARRAY OF OBJECTS
+  // CAN ONLY ADD A LANGUAGE ONCE
 router.post('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
   const profile_id = req.params.profileid;
   const newLanguage = req.body;

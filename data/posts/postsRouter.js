@@ -45,10 +45,26 @@ router.get('/users/:userid/posts', [validateUserID], (req, res) => {
     })
 })
 
+// GET ALL POSTS BY USER ID AND SHOW USER (USERS AND ADMINS)
+router.get('/users/:userid/posts/full', [validateUserID], (req, res) => {
+  postsDB.findByUserFull(req.params.userid)
+    .then(posts => {
+      if(!posts.post[0]){
+        res.status(400).json({ message: 'User has no posts' }) // ✅
+      }else{
+        res.status(200).json(posts) // ✅
+      }
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
+})
+
 // ADD NEW POST (OWNER)
 router.post('/posts', [validatePost], (req, res) => {
   const post = req.body;
   post.user_id = req.decodeJwt.id
+
   postsDB.add(post)
     .then(newPost => {
       res.status(201).json(newPost) // ✅
@@ -61,6 +77,7 @@ router.post('/posts', [validatePost], (req, res) => {
 // UPDATE POST (OWNER)
 router.put('/posts/:postid', [validatePostID], (req, res) => {
   const id = Number(req.params.postid);
+
   postsDB.findById(id)
     .then(post => {
       if(post.user_id === req.decodeJwt.id){
@@ -83,6 +100,7 @@ router.put('/posts/:postid', [validatePostID], (req, res) => {
 // DELETE POST (OWNER AND ADMIN)
 router.delete('/posts/:postid', [validatePostID], (req, res) => {
   const id = Number(req.params.postid);
+  
   postsDB.findById(id)
     .then(post => {
       if(post.user_id === req.decodeJwt.id || req.decodeJwt.role === 'admin'){
