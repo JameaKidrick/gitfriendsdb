@@ -76,6 +76,7 @@ router.post('/login', [validateLogin], (req, res) => {
     .then(findUser => {
       if(findUser && bcrypt.compareSync(password, findUser.password)){
         const token = getJwtToken(findUser.user_id, findUser.username,findUser.role)
+        
         res.status(201).json({ message: `Welcome ${findUser.username}!`, 'ID': findUser.user_id, 'ROLE':findUser.role, token }) // ✅
       }else{
         res.status(401).json({ message: 'Invalid credentials' }) // ✅
