@@ -105,7 +105,7 @@ router.delete('/profiles/:profileid', [validateProfileID], (req, res) => {
           res.status(500).json({ error: 'Internal server error', error })
         })
       }else{
-        res.status(403).json({ error: 'User is not authorized to update this profile' }) // ✅
+        res.status(403).json({ error: 'User is not authorized to delete this profile' }) // ✅
       }
     })
 })
