@@ -1,3 +1,34 @@
+// module.exports = [
+//   {
+//     user_id: 1,
+//     avatar: 'AVATAR1',
+//     location: 'LOCATION1',
+//     about_me: `ABOUT_ME1`,
+//     dob_display: 'January 1 1983'
+//   },
+//   {
+//     user_id: 2,
+//     avatar: 'AVATAR2',
+//     location: 'LOCATION2',
+//     about_me: `ABOUT_ME2`,
+//     dob_display: 'January 1 1983'
+//   },
+//   {
+//     user_id: 3,
+//     avatar: 'AVATAR3',
+//     location: 'LOCATION3',
+//     about_me: `ABOUT_ME3`,
+//     dob_display: 'January 1 1983'
+//   },
+//   {
+//     user_id: 4,
+//     avatar: 'AVATAR4',
+//     location: 'LOCATION4',
+//     about_me: `ABOUT_ME4`,
+//     dob_display: 'January 1 1983'
+//   }
+// ]
+
 module.exports = [
   {
     user_id: 1,

@@ -15,6 +15,7 @@ module.exports = {
 // GET ALL USERS
 function find(){
   return db('users')
+    .select('user_id', 'username', 'first_name', 'last_name', 'email', 'date_of_birth', 'role', 'created_at')
 }
 
 // GET SPECIFIC USER BY ID

@@ -1,3 +1,45 @@
+// module.exports = [
+//   {
+//     first_name: "user1", // 1
+//     last_name: "user1",
+//     date_of_birth: "1983-01-01",
+//     username: "user1",
+//     password: "$2b$10$yGNKn1RJt4ODgHpJP/7GxOw2Ll41qsPa5/9es0GhIeEPcJUVRkOBi", // password
+//     email: "user1@email.com",
+//     role: "member"
+//   },
+//   {
+//     first_name: "user2", // 2
+//     last_name: "user2",
+//     date_of_birth: "1983-01-01",
+//     username: "user2",
+//     password: "$2b$10$6hdITF225N.1Kai6LToIBeZqdOAaMqlniGGihQ8os5aIOJRUQ.OPu", // password
+//     email: "user2@email.com",
+//     role: "member"
+//   },
+//   {
+//     first_name: "adminUser1", // 3
+//     last_name: "adminUser1",
+//     date_of_birth: "1983-01-01",
+//     username: "adminUser1",
+//     password: "$2b$10$Vw2QvobiXwhV6SXxAjV1UemBFMR5N7ZIyAxsmVsvbxUOqxdVuaKAy", // password
+//     email: "adminUser1@email.com",
+//     role: "admin"
+//   },
+//   {
+//     first_name: "adminUser2", // 4
+//     last_name: "adminUser2",
+//     date_of_birth: "1983-01-01",
+//     username: "adminUser2",
+//     password: "$2b$10$LfpSmsQFgeJ93va35Z3LQOc7OF4lG96/9jxniD629laQK4xrHgqRS", // password
+//     email: "adminUser2@email.com",
+//     role: "pending admin"
+//   }
+// ]
+
+
+
+
 module.exports = [
   {
     first_name: "Kim", // 1
@@ -99,56 +141,56 @@ module.exports = [
     email: "meakidrick@email.com",
     role: "admin"
   },
-  {
-    // TEMPORARY
-    first_name: "Ryan", // 12
-    last_name: "Tenorio",
-    date_of_birth: "1991-12-26",
-    username: "ryanTenorio",
-    password: "$2b$10$AKF9ErOcuC1mAaxvZvSgY.X3lsmhRn8N8XgdarjCsqUGu6lNVVXie", // password
-    email: "ryantenorio@email.com",
-    role: "pending admin"
-  },
-  {
-    // TEMPORARY
-    first_name: "Devarick", // 13
-    last_name: "Tenorio",
-    date_of_birth: "1991-12-26",
-    username: "devarickespiritu",
-    password: "$2b$10$.63SDI6mQrDVidncfzbWiOolM6JBdIHOuM2rkj4VVhJNjTTwPORPu", // password
-    email: "devarickespiritu@email.com",
-    role: "pending admin"
-  },
-  {
-    // TEMPORARY
-    first_name: "William", // 14
-    last_name: "Espiritu",
-    date_of_birth: "1999-05-09",
-    username: "williamespiritu",
-    password: "$2b$10$thDrNoF9nV6WXNL2tCNrk.Y0pt5yqVuY.0UqCzqMTw/Q96gVaeNry", // password
-    email: "williamespiritu@email.com",
-    role: "pending admin"
-  },
-  {
-    // TEMPORARY
-    first_name: "Nate", // 15
-    last_name: "Eaton",
-    date_of_birth: "1989-11-29",
-    username: "nateeaton",
-    password: "$2b$10$PU.hT2awPFpCXOMXUDlJmOVyL1484t5RlwYYaNYr/p3JsZ1L4gsEm", // password
-    email: "nateeaton@email.com",
-    role: "pending admin"
-  },
-  {
-    // TEMPORARY
-    first_name: "Mindy", // 16
-    last_name: "Tenorio",
-    date_of_birth: "1992-3-15",
-    username: "mindytenorio",
-    password: "$2b$10$Fk93aVcir0NRJr/cbOFi3.VTV3SX7WsozKaFjKVgje0BK5AYKEdWS", // password
-    email: "mindytenorio@email.com",
-    role: "pending admin"
-  }
+  // {
+  //   // TEMPORARY
+  //   first_name: "Ryan", // 12
+  //   last_name: "Tenorio",
+  //   date_of_birth: "1991-12-26",
+  //   username: "ryanTenorio",
+  //   password: "$2b$10$AKF9ErOcuC1mAaxvZvSgY.X3lsmhRn8N8XgdarjCsqUGu6lNVVXie", // password
+  //   email: "ryantenorio@email.com",
+  //   role: "pending admin"
+  // },
+  // {
+  //   // TEMPORARY
+  //   first_name: "Devarick", // 13
+  //   last_name: "Tenorio",
+  //   date_of_birth: "1991-12-26",
+  //   username: "devarickespiritu",
+  //   password: "$2b$10$.63SDI6mQrDVidncfzbWiOolM6JBdIHOuM2rkj4VVhJNjTTwPORPu", // password
+  //   email: "devarickespiritu@email.com",
+  //   role: "pending admin"
+  // },
+  // {
+  //   // TEMPORARY
+  //   first_name: "William", // 14
+  //   last_name: "Espiritu",
+  //   date_of_birth: "1999-05-09",
+  //   username: "williamespiritu",
+  //   password: "$2b$10$thDrNoF9nV6WXNL2tCNrk.Y0pt5yqVuY.0UqCzqMTw/Q96gVaeNry", // password
+  //   email: "williamespiritu@email.com",
+  //   role: "pending admin"
+  // },
+  // {
+  //   // TEMPORARY
+  //   first_name: "Nate", // 15
+  //   last_name: "Eaton",
+  //   date_of_birth: "1989-11-29",
+  //   username: "nateeaton",
+  //   password: "$2b$10$PU.hT2awPFpCXOMXUDlJmOVyL1484t5RlwYYaNYr/p3JsZ1L4gsEm", // password
+  //   email: "nateeaton@email.com",
+  //   role: "pending admin"
+  // },
+  // {
+  //   // TEMPORARY
+  //   first_name: "Mindy", // 16
+  //   last_name: "Tenorio",
+  //   date_of_birth: "1992-3-15",
+  //   username: "mindytenorio",
+  //   password: "$2b$10$Fk93aVcir0NRJr/cbOFi3.VTV3SX7WsozKaFjKVgje0BK5AYKEdWS", // password
+  //   email: "mindytenorio@email.com",
+  //   role: "pending admin"
+  // }
 ];
 
 // {

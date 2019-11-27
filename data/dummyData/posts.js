@@ -1,3 +1,21 @@
+// module.exports = [
+//   {
+//     user_id: 1, // 1
+//     title: `TITLE1`,
+//     post: `POST1`
+//   },
+//   {
+//     user_id: 1, // 2
+//     title: `TITLE2`,
+//     post: `POST2`
+//   },
+//   {
+//     user_id: 2, // 3
+//     post: `POST3`
+//   }
+// ]
+
+
 module.exports = [
   {
     user_id: 1, // 1

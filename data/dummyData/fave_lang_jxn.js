@@ -1,3 +1,46 @@
+// module.exports = [
+//   {
+//     profile_id: 1,
+//     language_id: 9
+//   },
+//   {
+//     profile_id: 1,
+//     language_id: 23
+//   },
+//   {
+//     profile_id: 1,
+//     language_id: 35
+//   },
+//   {
+//     profile_id: 1,
+//     language_id: 36
+//   },
+//   {
+//     profile_id: 1,
+//     language_id: 45
+//   },
+//   {
+//     profile_id: 2,
+//     language_id: 3
+//   },
+//   {
+//     profile_id: 2,
+//     language_id: 9
+//   },
+//   {
+//     profile_id: 2,
+//     language_id: 25
+//   },
+//   {
+//     profile_id: 2,
+//     language_id: 22
+//   },
+//   {
+//     profile_id: 2,
+//     language_id: 44
+//   }
+// ]
+
 module.exports = [
   {
     profile_id: 1,

@@ -3,6 +3,39 @@
   // 2 = accepted; 
   // 3 = declined, delete from table???
 
+// module.exports = [
+//   {
+//     user1_id: 1,
+//     user2_id: 2,
+//     requestor_id: 2,
+//     request_status: 1
+//   },
+//   {
+//     user1_id: 1,
+//     user2_id: 3,
+//     requestor_id: 1,
+//     request_status: 2
+//   },
+//   {
+//     user1_id: 1,
+//     user2_id: 4,
+//     requestor_id: 1,
+//     request_status: 2
+//   },
+//   {
+//     user1_id: 2,
+//     user2_id: 3,
+//     requestor_id: 2,
+//     request_status: 2
+//   },
+//   {
+//     user1_id: 2,
+//     user2_id: 4,
+//     requestor_id: 2,
+//     request_status: 2
+//   }
+// ]
+
 module.exports = [
   {
     user1_id: 1,

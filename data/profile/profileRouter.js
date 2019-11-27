@@ -19,6 +19,26 @@ router.get('/profiles', (req, res) => {
     })
 })
 
+router.get('/profiles/:userid/full', (req, res) => {
+  profileDB.findUserProfileFull(req.params.userid)
+    .then(userProfile => {
+      res.status(200).json(userProfile) // ✅
+    })
+  .catch(error => {
+    res.status(500).json({ error: 'Internal server error', error })
+  })
+})
+
+router.get('/profiles', (req, res) => {
+  profileDB.find()
+    .then(profiles => {
+      res.status(200).json(profiles) // ✅
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
+})
+
 // GET PROFILE BY ID
 router.get('/profiles/:profileid', [validateProfileID], (req, res) => {
   profileDB.findBy(req.params.profileid)

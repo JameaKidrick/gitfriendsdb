@@ -1,3 +1,21 @@
+// module.exports = [
+//   {
+//     user_id: 1,
+//     post_id: 3,
+//     comment: 'COMMENT1'
+//   },
+//   {
+//     user_id: 2,
+//     post_id: 1,
+//     comment: 'COMMENT2'
+//   },
+//   {
+//     user_id: 2,
+//     post_id: 2,
+//     comment: 'COMMENT3'
+//   }
+// ]
+
 module.exports = [
   {
     user_id: 1,

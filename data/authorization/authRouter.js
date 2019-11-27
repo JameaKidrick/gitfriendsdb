@@ -60,7 +60,7 @@ router.post('/register', [validateRegister], (req, res) => {
         authDB.findByUsername(req.user.username)
           .then(newUser => {
             const token = getJwtToken(newUser.user_id, newUser.username,newUser.role)
-            res.status(201).json({ 'New User Created': newUser.username, 'ID':newUser.user_id, token }) // ✅
+            res.status(201).json({ 'username': newUser.username, 'ID':newUser.user_id, token }) // ✅
           })
           .catch(error => {
             res.status(500).json({ error: 'Internal server error ', error }) // ✅
