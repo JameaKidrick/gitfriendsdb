@@ -60,7 +60,7 @@ router.post('/register', [validateRegister], (req, res) => {
         authDB.findByUsername(req.user.username)
           .then(newUser => {
             const token = getJwtToken(newUser.user_id, newUser.username,newUser.role)
-            res.status(201).json({ 'username': newUser.username, 'ID':newUser.user_id, token }) // ✅
+            res.status(201).json({ 'username': newUser.username, 'id':newUser.user_id, token }) // ✅
           })
           .catch(error => {
             res.status(500).json({ error: 'Internal server error ', error }) // ✅
@@ -77,9 +77,9 @@ router.post('/login', [validateLogin], (req, res) => {
       if(findUser && bcrypt.compareSync(password, findUser.password)){
         const token = getJwtToken(findUser.user_id, findUser.username,findUser.role)
         
-        res.status(201).json({ message: `Welcome ${findUser.username}!`, 'ID': findUser.user_id, 'ROLE':findUser.role, token }) // ✅
+        res.status(201).json({ 'username': findUser.username, 'id': findUser.user_id, token }) // ✅
       }else{
-        res.status(401).json({ message: 'Invalid credentials' }) // ✅
+        res.status(401).json({ error: 'Invalid credentials' }) // ✅
       }
     })
     .catch(error => {
