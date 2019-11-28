@@ -4,6 +4,7 @@ module.exports = {
   find,
   findBy,
   findByProfile,
+  findByProfileCompare,
   add,
   remove
 }
@@ -25,6 +26,13 @@ function findByProfile(profileid) {
     .join('profile', 'profile.profile_id', '=', 'jxn.profile_id')
     .join('languages', 'languages.language_id', '=', 'jxn.language_id')
     .where({ 'jxn.profile_id':profileid })
+}
+
+function findByProfileCompare(profileid, langid) {
+  return db('jxn')
+    .join('languages', 'languages.language_id', '=', 'jxn.language_id')
+    .where({ 'jxn.profile_id':profileid })
+    .andWhere({ 'jxn.language_id':langid })
 }
 
 function add(id) {

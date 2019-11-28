@@ -55,22 +55,28 @@ router.get('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
 })
 
 // ADD LANGUAGE
-  // COME BACK TO AFTER SETTING UP USESTATE TO SEND BACK ARRAY OF OBJECTS
-  // CAN ONLY ADD A LANGUAGE ONCE
 router.post('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
-  const profile_id = req.params.profileid;
+  const profile_id = Number(req.params.profileid);
   const newLanguage = req.body;
   newLanguage.profile_id = profile_id;
 
   profileDB.findBy(profile_id)
-    .then(profile => {
+  .then(profile => {
+    console.log(req.decodeJwt.id, profile.user_id)
       if(req.decodeJwt.id === profile.user_id){
-        faveLangDB.add(newLanguage)
-          .then(language => {
-            res.status(201).json(language)
-          })
-          .catch(error => {
-            res.status(500).json({ error: 'Internal server error ', error }) // ✅
+        faveLangDB.findByProfileCompare(profile_id, newLanguage.language_id)
+          .then(jxn => {
+            if(jxn[0]){
+              res.status(400).json({ error: `You have already added the language: ${jxn[0].language}` })
+            }else{
+              faveLangDB.add(newLanguage)
+                .then(language => {
+                  res.status(201).json(language)
+                })
+                .catch(error => {
+                  res.status(500).json({ error: 'Internal server error ', error }) // ✅
+                })
+            }
           })
       }else{
         res.status(403).json({ error: 'User does not have the authorization to alter language list' }) // ✅
