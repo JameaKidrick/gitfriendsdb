@@ -27,6 +27,23 @@ function getJwtToken(id, username, role){
   return jwt.sign({payload}, secret, options);
 };
 
+router.post('/register/checkUsername', (req, res) => {
+  authDB.findByUsername(req.body.username)
+    .then(username => {
+      if(username){
+        res.status(400).json({ error: 'Username is already in the database' }) // ✅
+      }
+    })
+})
+
+router.post('/register/checkEmail', (req, res) => {
+  authDB.findByEmail(req.body.email)
+    .then(email => {
+      if(email){
+        res.status(400).json({ error: 'Email is already in the database' }) // ✅
+      }
+    })
+})
 
 router.post('/register', [validateRegister], (req, res) => {
   const hash = bcrypt.hashSync(req.user.password, 10); 

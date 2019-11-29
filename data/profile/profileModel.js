@@ -3,6 +3,7 @@ const db = require('../dbConfig');
 module.exports = {
   find,
   findUserProfileFull,
+  findAllUsersProfileFull,
   findUsers,
   findBy,
   findByUser,
@@ -26,6 +27,12 @@ function findUserProfileFull(user_id){
           return {user:user[0], profile:profile[0]}
         })
     })
+}
+
+function findAllUsersProfileFull(){
+  return db('profile')
+    .select('users.user_id', 'users.username', 'users.first_name', 'users.last_name', 'users.role', 'profile.profile_id', 'profile.avatar', 'profile.location', 'profile.about_me', 'profile.dob_display')
+    .join('users', 'users.user_id', '=', 'profile.user_id')
 }
 
 function findUsers(){

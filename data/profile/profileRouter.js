@@ -19,6 +19,7 @@ router.get('/profiles', (req, res) => {
     })
 })
 
+// GET ONE USER'S FULL PROFILE INFO
 router.get('/profiles/:userid/full', (req, res) => {
   profileDB.findUserProfileFull(req.params.userid)
     .then(userProfile => {
@@ -29,8 +30,9 @@ router.get('/profiles/:userid/full', (req, res) => {
   })
 })
 
-router.get('/profiles', (req, res) => {
-  profileDB.find()
+// GET ALL USERS' FULL PROFILE INFO
+router.get('/profiles/all', (req, res) => {
+  profileDB.findAllUsersProfileFull()
     .then(profiles => {
       res.status(200).json(profiles) // ✅
     })
