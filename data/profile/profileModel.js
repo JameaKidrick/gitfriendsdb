@@ -21,7 +21,7 @@ function findUserProfileFull(user_id){
     .where({'user_id':user_id})
     .then(profile => {
       return db('users')
-        .select('user_id', 'username')
+        .select('user_id', 'username', 'role', 'date_of_birth')
         .where({'user_id':user_id})
         .then(user => {
           return {user:user[0], profile:profile[0]}
