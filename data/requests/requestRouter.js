@@ -4,7 +4,7 @@ const validateUserID = require('../middleware/validateUserID');
 const validateRequestID = require('../middleware/validateRequestID');
 
 const requestDB = require('./requestModel');
-
+const profileDB = require('../profile/profileModel');
 
 const router = express.Router();
 
@@ -57,7 +57,17 @@ router.get('/users/:userid/requests', [validateUserID], (req, res) => {
       if(!userRequests.length){
         res.status(400).json({ message: 'No new requests' }) // ✅
       }else{
-        res.status(200).json(userRequests) // ✅
+        userRequests.map(element => {
+          profileDB.findUserProfileFull(element.user1_id)
+          .then(user1 => {
+            profileDB.findUserProfileFull(element.user2_id)
+              .then(user2 => {
+                console.log(element, user1, user2)
+                res.status(200).json({request:element, user1, user2}) // ✅
+                
+              })
+          })
+        })
       }
     })
     .catch(error => {

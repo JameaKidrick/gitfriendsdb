@@ -1,7 +1,7 @@
 const usersDB = require('../users/usersModel');
 
 const validateUserID = (req, res, next) => {
-  const id = req.params.userid
+  const id = Number(req.params.userid)
 
   usersDB.findById(id)
     .then(user => {
