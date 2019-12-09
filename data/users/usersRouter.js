@@ -6,6 +6,8 @@ const router = express.Router();
 const usersDB = require('./usersModel');
 
 const validateUserID = require('../middleware/validateUserID');
+const validateUsername = require('../middleware/validateUsername');
+const validateEmail = require('../middleware/validateEmail');
 
 // GET ALL USERS (USER AND ADMIN)
 router.get('/', (req, res) => {
@@ -19,7 +21,7 @@ router.get('/', (req, res) => {
 })
 
 // UPDATE USER (PASSWORD => USER NEEDS TO GO THROUGH CONFIRMATION FIRST)
-router.put('/:userid', [validateUserID], (req, res) => {
+router.put('/:userid', [validateUserID, validateUsername, validateEmail], (req, res) => {
   const userid = Number(req.params.userid);
   let changes = req.body;
 

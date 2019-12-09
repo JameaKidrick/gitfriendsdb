@@ -5,6 +5,7 @@ module.exports = {
   findBy,
   findByProfile,
   findByProfileCompare,
+  update,
   add,
   remove
 }
@@ -33,6 +34,20 @@ function findByProfileCompare(profileid, langid) {
     .join('languages', 'languages.language_id', '=', 'jxn.language_id')
     .where({ 'jxn.profile_id':profileid })
     .andWhere({ 'jxn.language_id':langid })
+}
+
+// REMOVES ALL LANGUAGES THEN ADDS NEW LIST
+function update(id, profileid){
+  return db('jxn')
+    .del()
+    .where({ 'jxn.profile_id':profileid })
+    .then(deleted => {
+      return db('jxn')
+        .insert(id, 'jxn.id')
+        .then(ids => {
+          return findBy(ids[0])
+        })
+    })
 }
 
 function add(id) {
