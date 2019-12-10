@@ -57,17 +57,7 @@ router.get('/users/:userid/requests', [validateUserID], (req, res) => {
       if(!userRequests.length){
         res.status(400).json({ message: 'No new requests' }) // ✅
       }else{
-        userRequests.map(element => {
-          profileDB.findUserProfileFull(element.user1_id)
-          .then(user1 => {
-            profileDB.findUserProfileFull(element.user2_id)
-              .then(user2 => {
-                console.log(element, user1, user2)
-                res.status(200).json({request:element, user1, user2}) // ✅
-                
-              })
-          })
-        })
+          res.status(200).json(userRequests)
       }
     })
     .catch(error => {
@@ -97,6 +87,17 @@ router.get('/users/:userid/friends', [validateUserID], (req, res) => {
   }
 })
 
+// GET FRIEND REQUEST BY PAIR
+router.get('/users/:userid/status/:friendid', [validateUserID], (req, res) => {
+  const firstUser_id = Number(req.params.userid);
+  const secondUser_id = Number(req.params.friendid);
+  console.log(req.params.userid, req.params.friendid)
+  requestDB.findByPair(firstUser_id, secondUser_id)
+    .then(request => {
+      console.log(request)
+      res.status(200).json(request)
+    })
+})
 
 // SEND FRIEND REQUEST (USER ONLY)
 router.post('/users/:userid/requests', [validateUserID], (req, res) => {
