@@ -2,9 +2,10 @@ const express = require('express');
 
 const validateUserID = require('../middleware/validateUserID');
 const validateRequestID = require('../middleware/validateRequestID');
+const validateFriendID = require('../middleware/validateFriendID');
 
 const requestDB = require('./requestModel');
-
+const profileDB = require('../profile/profileModel');
 
 const router = express.Router();
 
@@ -57,7 +58,7 @@ router.get('/users/:userid/requests', [validateUserID], (req, res) => {
       if(!userRequests.length){
         res.status(400).json({ message: 'No new requests' }) // ✅
       }else{
-        res.status(200).json(userRequests) // ✅
+          res.status(200).json(userRequests)
       }
     })
     .catch(error => {
@@ -87,11 +88,22 @@ router.get('/users/:userid/friends', [validateUserID], (req, res) => {
   }
 })
 
+// GET FRIEND REQUEST BY PAIR
+router.get('/users/:userid/status/:friendid', [validateUserID], (req, res) => {
+  const firstUser_id = Number(req.params.userid);
+  const secondUser_id = Number(req.params.friendid);
+  console.log(req.params.userid, req.params.friendid)
+  requestDB.findByPair(firstUser_id, secondUser_id)
+    .then(request => {
+      console.log(request)
+      res.status(200).json(request)
+    })
+})
 
 // SEND FRIEND REQUEST (USER ONLY)
 router.post('/users/:userid/requests', [validateUserID], (req, res) => {
   const friend_id = Number(req.params.userid);
-  console.log(friend_id)
+  console.log(req.params.userid)
 
   if(req.decodeJwt.id === friend_id){
     request = 0;
@@ -171,10 +183,30 @@ router.delete('/requests/:requestid', [validateRequestID], (req, res) => {
 
   requestDB.findBy(request_id)
     .then(request => {
-      if(req.decodeJwt.id === request.requestor_id){
+      if((req.decodeJwt.id === request.requestor_id) || (req.decodeJwt.role === 'admin')){
         requestDB.remove(request_id)
           .then(deletedRequest => {
             res.status(201).json({ 'DELETED':deletedRequest }) // ✅
+          })
+          .catch(error => {
+            res.status(500).json({ error: 'Internal server error', error })
+          })
+      }else{
+        res.status(400).json({ error: 'User does not have the authorization to delete this request' })
+      }
+    })
+})
+
+// DELETE FRIEND (USER AND ADMIN ONLY)
+router.delete('/friends/:requestid', [validateFriendID], (req, res) => {
+  const request_id = Number(req.params.requestid);
+
+  requestDB.findFriendStatusBy(request_id)
+    .then(request => {
+      if((req.decodeJwt.id === request.user1_id) || (req.decodeJwt.id === request.user2_id)  || (req.decodeJwt.role === 'admin')){
+        requestDB.remove(request_id)
+          .then(deletedFriend => {
+            res.status(201).json({ 'DELETED':deletedFriend }) // ✅
           })
           .catch(error => {
             res.status(500).json({ error: 'Internal server error', error })

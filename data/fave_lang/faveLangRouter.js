@@ -54,6 +54,33 @@ router.get('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
     })
 })
 
+// UPDATE LANGUAGE(S)
+router.post('/profiles/:profileid/updateFave', [validateProfileID], (req, res) => {
+  const profile_id = Number(req.params.profileid);
+  const newLanguage = req.body;
+  newLanguage.profile_id = profile_id;
+
+  profileDB.findBy(profile_id)
+  .then(profile => {
+    console.log(req.decodeJwt.id, profile.user_id)
+      if(req.decodeJwt.id === profile.user_id){
+        faveLangDB.update(newLanguage, profile_id)
+        .then(language => {
+          console.log(language)
+            res.status(201).json(language)
+        })
+          // .catch(error => {
+          //   res.status(500).json({ error: 'Internal server error ', error }) // ✅
+          // })  
+      }else{
+        res.status(403).json({ error: 'User does not have the authorization to alter language list' }) // ✅
+      }
+    })
+    // .catch(error => {
+    //   res.status(500).json({ error: 'Internal server error ', error })
+    // })
+})
+
 // ADD LANGUAGE
 router.post('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
   const profile_id = Number(req.params.profileid);

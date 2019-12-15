@@ -9,11 +9,12 @@ const verifyToken = (req, res, next) => {
 
     jwt.verify(token, secret, (err, decodedToken) => {
       if(err){
-        res.status(401).json({ error: 'Invalid credentials' })
+        res.status(401).json({ error: 'Invalid credentials: token' })
       }else{
         authDB.findByUsername(decodedToken.payload.username)
           .then(user => {
             req.decodeJwt = decodedToken.payload;
+
             next();
           })
       }

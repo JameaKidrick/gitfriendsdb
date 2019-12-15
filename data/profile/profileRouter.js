@@ -5,6 +5,7 @@ const validateProfile = require('../middleware/validateProfile');
 const validateUserID = require('../middleware/validateUserID');
 
 const profileDB = require('./profileModel');
+const requestDB = require('../requests/requestModel');
 
 const router = express.Router();
 
@@ -40,6 +41,18 @@ router.get('/profiles/all', (req, res) => {
       res.status(500).json({ error: 'Internal server error', error })
     })
 })
+
+// // GET ALL USERS' FULL PROFILE INFO
+// router.get('/profiles/all/requests/:userid', (req, res) => {
+//   profileDB.findAllUsersProfileRequest(req.params.userid)
+//     .then(profiles => {
+//       console.log('made it', profiles)
+//       // res.status(200).json(profiles) // ✅
+//     })
+// //     .catch(error => {
+// //       res.status(500).json({ error: 'Internal server error', error })
+// //     })
+// })
 
 // GET PROFILE BY ID
 router.get('/profiles/:profileid', [validateProfileID], (req, res) => {

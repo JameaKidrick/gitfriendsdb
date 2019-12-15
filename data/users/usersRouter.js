@@ -6,6 +6,8 @@ const router = express.Router();
 const usersDB = require('./usersModel');
 
 const validateUserID = require('../middleware/validateUserID');
+const validateUsername = require('../middleware/validateUsername');
+const validateEmail = require('../middleware/validateEmail');
 
 // GET ALL USERS (USER AND ADMIN)
 router.get('/', (req, res) => {
@@ -18,8 +20,20 @@ router.get('/', (req, res) => {
     })
 })
 
+// GET SPECIFIC USER
+router.get('/user', (req, res) => {
+
+  usersDB.findById(req.decodeJwt.id)
+    .then(user => {
+      res.status(200).json({ userid:req.decodeJwt.id, username:req.decodeJwt.username, role:req.decodeJwt.role, profileid:user.profile_id })
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
+})
+
 // UPDATE USER (PASSWORD => USER NEEDS TO GO THROUGH CONFIRMATION FIRST)
-router.put('/:userid', [validateUserID], (req, res) => {
+router.put('/:userid', [validateUserID, validateUsername, validateEmail], (req, res) => {
   const userid = Number(req.params.userid);
   let changes = req.body;
 
