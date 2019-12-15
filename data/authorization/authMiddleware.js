@@ -14,6 +14,7 @@ const verifyToken = (req, res, next) => {
         authDB.findByUsername(decodedToken.payload.username)
           .then(user => {
             req.decodeJwt = decodedToken.payload;
+
             next();
           })
       }

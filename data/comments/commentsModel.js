@@ -33,6 +33,9 @@ function findByUserId(userid){
 // GET COMMENTS BY POST ID (USERS AND ADMIN)
 function findByPostId(postid){
   return db('comments')
+    .select('comments.comment_id', 'comments.user_id', 'users.username', 'profile.avatar', 'comments.post_id', 'comments.comment', 'comments.created_at',)
+    .join('users', 'users.user_id', '=', 'comments.user_id')
+    .join('profile', 'profile.user_id', '=', 'comments.user_id')
     .where({ 'post_id':postid })
 }
 

@@ -35,7 +35,7 @@ router.get('/users/:userid/posts', [validateUserID], (req, res) => {
   postsDB.findByUser(req.params.userid)
     .then(posts => {
       if(!posts[0]){
-        res.status(400).json({ message: 'User has no posts' }) // ✅
+        res.status(400).json({ message: 'user has no posts' }) // ✅
       }else{
         res.status(200).json(posts) // ✅
       }

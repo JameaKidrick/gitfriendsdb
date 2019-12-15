@@ -21,8 +21,9 @@ function find(){
 // GET SPECIFIC USER BY ID
 function findById(id){
   return db('users')
-    .select('user_id', 'username', 'first_name', 'last_name', 'email', 'role')
-    .where({ 'user_id':id })
+    .select('users.user_id', 'username', 'first_name', 'last_name', 'email', 'role', 'profile.profile_id')
+    .join('profile', 'profile.user_id', '=', 'users.user_id')
+    .where({ 'users.user_id':id })
     .first()
 }
 
