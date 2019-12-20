@@ -27,22 +27,22 @@ router.get('/user', (req, res) => {
     .then(user => {
       res.status(200).json({ userid:req.decodeJwt.id, username:req.decodeJwt.username, role:req.decodeJwt.role, profileid:user.profile_id })
     })
-    // .catch(error => {
-    //   res.status(500).json({ error: 'Internal server error', error })
-    // })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
 })
 
 // GET SPECIFIC USER (ONLY FOR CREATE PROFILE PAGE 1)
-router.get('/user/create', (req, res) => {
+router.get('/create', (req, res) => {
 
   usersDB.findByIdShort(req.decodeJwt.id)
     .then(user => {
       
-        res.status(200).json({ userid:req.decodeJwt.id, username:req.decodeJwt.username, role:req.decodeJwt.role })
+        res.status(200).json({ userid:req.decodeJwt.id, username:req.decodeJwt.username, role:req.decodeJwt.role, dob:user.date_of_birth })
     })
-    // .catch(error => {
-    //   res.status(500).json({ error: 'Internal server error', error })
-    // })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
 })
 
 // UPDATE USER (PASSWORD => USER NEEDS TO GO THROUGH CONFIRMATION FIRST)
