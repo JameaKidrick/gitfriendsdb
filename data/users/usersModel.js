@@ -3,6 +3,7 @@ const db = require('../dbConfig');
 module.exports = {
   find,
   findById,
+  findByIdShort,
   findByEmail,
   findByUsername,
   add,
@@ -21,8 +22,16 @@ function find(){
 // GET SPECIFIC USER BY ID
 function findById(id){
   return db('users')
-    .select('users.user_id', 'username', 'first_name', 'last_name', 'email', 'role', 'profile.profile_id')
+    .select('users.user_id', 'username', 'first_name', 'last_name', 'email', 'role', 'date_of_birth', 'profile.profile_id')
     .join('profile', 'profile.user_id', '=', 'users.user_id')
+    .where({ 'users.user_id':id })
+    .first()
+}
+
+// GET SPECIFIC USER BY ID (ONLY FOR CREATE PROFILE PAGE 1)
+function findByIdShort(id){
+  return db('users')
+    .select('users.user_id', 'username', 'first_name', 'last_name', 'email', 'role', 'date_of_birth')
     .where({ 'users.user_id':id })
     .first()
 }

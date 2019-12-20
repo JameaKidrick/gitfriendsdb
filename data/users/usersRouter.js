@@ -32,6 +32,19 @@ router.get('/user', (req, res) => {
     })
 })
 
+// GET SPECIFIC USER (ONLY FOR CREATE PROFILE PAGE 1)
+router.get('/create', (req, res) => {
+
+  usersDB.findByIdShort(req.decodeJwt.id)
+    .then(user => {
+      
+        res.status(200).json({ userid:req.decodeJwt.id, username:req.decodeJwt.username, role:req.decodeJwt.role, dob:user.date_of_birth })
+    })
+    .catch(error => {
+      res.status(500).json({ error: 'Internal server error', error })
+    })
+})
+
 // UPDATE USER (PASSWORD => USER NEEDS TO GO THROUGH CONFIRMATION FIRST)
 router.put('/:userid', [validateUserID, validateUsername, validateEmail], (req, res) => {
   const userid = Number(req.params.userid);

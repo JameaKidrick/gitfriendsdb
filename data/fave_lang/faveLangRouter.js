@@ -62,12 +62,11 @@ router.post('/profiles/:profileid/updateFave', [validateProfileID], (req, res) =
 
   profileDB.findBy(profile_id)
   .then(profile => {
-    console.log(req.decodeJwt.id, profile.user_id)
       if(req.decodeJwt.id === profile.user_id){
         faveLangDB.update(newLanguage, profile_id)
         .then(language => {
           console.log(language)
-            res.status(201).json(language)
+          res.status(201).json(language)
         })
           // .catch(error => {
           //   res.status(500).json({ error: 'Internal server error ', error }) // ✅
@@ -89,20 +88,24 @@ router.post('/profiles/:profileid/fave', [validateProfileID], (req, res) => {
 
   profileDB.findBy(profile_id)
   .then(profile => {
-    console.log(req.decodeJwt.id, profile.user_id)
       if(req.decodeJwt.id === profile.user_id){
         faveLangDB.findByProfileCompare(profile_id, newLanguage.language_id)
           .then(jxn => {
             if(jxn[0]){
               res.status(400).json({ error: `You have already added the language: ${jxn[0].language}` })
             }else{
-              faveLangDB.add(newLanguage)
-                .then(language => {
-                  res.status(201).json(language)
-                })
-                .catch(error => {
-                  res.status(500).json({ error: 'Internal server error ', error }) // ✅
-                })
+              console.log(newLanguage)
+              if(!newLanguage){
+                res.status(400).json({ error: 'Please add at least one language' })
+              }else{
+                faveLangDB.add(newLanguage)
+                  .then(language => {
+                    res.status(201).json(language)
+                  })
+                  .catch(error => {
+                    res.status(500).json({ error: 'Internal server error ', error }) // ✅
+                  })
+              }
             }
           })
       }else{
