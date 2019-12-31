@@ -37,16 +37,12 @@ function findByProfileCompare(profileid, langid) {
 }
 
 // REMOVES ALL LANGUAGES THEN ADDS NEW LIST
-function update(id, profileid){
+function update(profileid, changes){
   return db('jxn')
     .del()
     .where({ 'jxn.profile_id':profileid })
     .then(deleted => {
-      return db('jxn')
-        .insert(id, 'jxn.id')
-        .then(ids => {
-          return findBy(ids[0])
-        })
+      return add(changes)
     })
 }
 

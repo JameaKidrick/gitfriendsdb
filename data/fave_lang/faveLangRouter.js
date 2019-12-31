@@ -63,7 +63,7 @@ router.post('/profiles/:profileid/updateFave', [validateProfileID], (req, res) =
   profileDB.findBy(profile_id)
   .then(profile => {
       if(req.decodeJwt.id === profile.user_id){
-        faveLangDB.update(newLanguage, profile_id)
+        faveLangDB.update(profile_id, newLanguage)
         .then(language => {
           console.log(language)
           res.status(201).json(language)

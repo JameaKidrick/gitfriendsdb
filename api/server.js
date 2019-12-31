@@ -13,6 +13,7 @@ const usersRouter = require('../data/users/usersRouter');
 const faveLangRouter = require('../data/fave_lang/faveLangRouter');
 const postsRouter = require('../data/posts/postsRouter');
 const commentsRouter = require('../data/comments/commentsRouter');
+// const ultimateRouter = require('../data/full_endpoint/ultimateRouter');
 
 const server = express();
 
@@ -29,6 +30,7 @@ server.use('/api/users', [verifyToken], usersRouter);
 server.use('/api', [verifyToken], faveLangRouter);
 server.use('/api', [verifyToken], postsRouter);
 server.use('/api', [verifyToken], commentsRouter);
+// server.use('/api', [verifyToken], ultimateRouter);
 
 server.get('/', (req, res) => {
   res.send('Hello World!')

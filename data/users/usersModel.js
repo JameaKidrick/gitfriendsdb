@@ -26,6 +26,9 @@ function findById(id){
     .join('profile', 'profile.user_id', '=', 'users.user_id')
     .where({ 'users.user_id':id })
     .first()
+    .then(user => {
+      return user
+    })
 }
 
 // GET SPECIFIC USER BY ID (ONLY FOR CREATE PROFILE PAGE 1)
