@@ -33,9 +33,10 @@ router.get('/profiles/:userid/full', (req, res) => {
 
 // GET ALL USERS' FULL PROFILE INFO
 router.get('/profiles/all', (req, res) => {
-  profileDB.findAllUsersProfileFull()
+  console.log(req.query.sortby, req.query.sortdir)
+  profileDB.findAllUsersProfileFull(req.query)
     .then(profiles => {
-      res.status(200).json(profiles) // ✅
+      res.status(200).json({profiles, queries: req.query}) // ✅
     })
     .catch(error => {
       res.status(500).json({ error: 'Internal server error', error })

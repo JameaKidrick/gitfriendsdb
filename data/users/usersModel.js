@@ -14,9 +14,13 @@ module.exports = {
 }
 
 // GET ALL USERS
-function find(){
+function find(query){
   return db('users')
     .select('user_id', 'username', 'first_name', 'last_name', 'email', 'date_of_birth', 'role', 'created_at')
+    
+    // .then(users => {
+    //   return db('friend_request')
+    // })
 }
 
 // GET SPECIFIC USER BY ID

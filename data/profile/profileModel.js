@@ -31,30 +31,22 @@ function findUserProfileFull(user_id){
     })
 }
 
-function findAllUsersProfileFull(){
-  return db('profile')
-    .select('users.user_id', 'users.username', 'users.first_name', 'users.last_name', 'users.role', 'profile.profile_id', 'profile.avatar', 'profile.location', 'profile.about_me', 'profile.dob_display')
-    .join('users', 'users.user_id', '=', 'profile.user_id')   
-}
+function findAllUsersProfileFull(query){
+  // console.log(query)
+  let { page = 1, limit = 40, sortby = 'users.user_id', sortdir = 'asc' } = query;
+  const offset = limit * (page - 1);
 
-// let allUsers = []
-//       for(let i=0; i<users.length; i++){
-//         // console.log(users)
-//         const ids = users[i].user_id
-//         return requestDB.findByPair(userid, ids)
-//           .then(pair => {
-//             return pair
-//           })
-//         //   .then(pair => {
-//         //     // console.log({user:users[i], friend_status:pair})
-//         //     // return pair
-//         //     allUsers = [...allUsers, {user:users[i], friend_status:pair}]
-            
-//         //   })
-//         // console.log(allUsers)
-//       }
-//         // return allUsers
-//     })
+  return db('profile')
+    .select('users.user_id', 'users.username as username', 'users.first_name', 'users.last_name', 'users.role', 'profile.profile_id', 'profile.avatar', 'profile.location', 'profile.about_me', 'profile.dob_display')
+    .join('users', 'users.user_id', '=', 'profile.user_id')
+    .orderBy(sortby, sortdir)
+    .limit(limit)
+    .offset(offset)
+    // .then(profiles => {
+    //   // console.log(query)
+    //   return({profiles, query})
+    // })
+}
 
 function findAllUsersProfileRequest(userid){
   return findAllUsersProfileFull()

@@ -5,7 +5,6 @@ const validateRequestID = require('../middleware/validateRequestID');
 const validateFriendID = require('../middleware/validateFriendID');
 
 const requestDB = require('./requestModel');
-const profileDB = require('../profile/profileModel');
 
 const router = express.Router();
 
@@ -56,7 +55,7 @@ router.get('/users/:userid/requests', [validateUserID], (req, res) => {
   requestDB.findByUser(req.params.userid)
     .then(userRequests => {
       if(!userRequests.length){
-        res.status(400).json({ message: 'No new requests' }) // ✅
+        res.status(400).json({ error: 'No new requests' }) // ✅
       }else{
           res.status(200).json(userRequests)
       }
